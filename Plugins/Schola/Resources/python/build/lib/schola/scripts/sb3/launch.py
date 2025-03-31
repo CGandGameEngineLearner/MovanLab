@@ -3,6 +3,8 @@
 """
 Script to train a Stable Baselines3 model using Schola.
 """
+input("Press enter to continue")
+
 import os
 import pathlib
 from pkgutil import get_data

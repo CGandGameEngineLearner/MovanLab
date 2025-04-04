@@ -157,10 +157,12 @@ void AShooter::Look(const FInputActionValue& Value)
 void AShooter::StartRun(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void AShooter::EndRun(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 

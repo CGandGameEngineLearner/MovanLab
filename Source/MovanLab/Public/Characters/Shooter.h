@@ -21,13 +21,18 @@ class AShooter : public ACharacter
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category=Movement)
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 	float RunSpeed = 400.f;
 
-	UPROPERTY(EditAnywhere, Category=Movement)
-	float WalkSpeed = 210.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+	float WalkSpeed = 300.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+	float AimSpeed = 210.f;
+
+private:
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;

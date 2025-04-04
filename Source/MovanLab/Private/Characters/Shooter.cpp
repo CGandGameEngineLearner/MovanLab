@@ -90,6 +90,12 @@ void AShooter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooter::Look);
+
+		// Start Run
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AShooter::StartRun);
+
+		// End Run
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AShooter::EndRun);
 	}
 	else
 	{
@@ -147,3 +153,14 @@ void AShooter::Look(const FInputActionValue& Value)
 		ShootComponent->SetAimPitch(Pitch);
 	}
 }
+
+void AShooter::StartRun(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void AShooter::EndRun(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+

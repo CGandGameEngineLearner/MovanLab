@@ -1,22 +1,20 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapons/FiringWeapon.h"
+#include "Weapons/ShootWeapon.h"
 
 #include "GameFramework/Character.h"
 
 
-AFiringWeapon::AFiringWeapon()
+AShootWeapon::AShootWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MuzzleMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MuzzleMesh"));
-
-	MuzzleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("MuzzleArrow"));
+	MuzzleMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MuzzleMesh"));
 }
 
-FTrajectory AFiringWeapon::ComputeTrajectory_Implementation()
+FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 {
 	FTrajectory Result;
 	if (!OwnerCharacter)
@@ -68,6 +66,7 @@ FTrajectory AFiringWeapon::ComputeTrajectory_Implementation()
 					DrawDebugDirectionalArrow(OwnerCharacter->GetWorld(), HitResult.ImpactPoint, HitResult.ImpactPoint + HitResult.ImpactNormal * 100.f, 100.f, FColor::Blue, false, 1.0f, 0, 2.0f);
 				}
 
+				Result.ImpactCharacter = Cast<ACharacter>(HitResult.GetActor());
 
 			}
 		}
@@ -77,37 +76,40 @@ FTrajectory AFiringWeapon::ComputeTrajectory_Implementation()
 	return Result;
 }
 
-void AFiringWeapon::StartAttack_Implementation()
+void AShootWeapon::StartAttack_Implementation()
 {
 	bFiring = true;
 	
 }
 
-void AFiringWeapon::EndAttack_Implementation()
+void AShootWeapon::EndAttack_Implementation()
 {
 	bFiring = false;
 }
 
-void AFiringWeapon::Equip_Implementation(ACharacter* InOwner)
+void AShootWeapon::Equip_Implementation(ACharacter* InOwner)
 {
 	OwnerCharacter = InOwner;
 }
 
-void AFiringWeapon::UnEquip_Implementation()
+void AShootWeapon::UnEquip_Implementation()
 {
 	OwnerCharacter = nullptr;
 }
 
 
 // Called when the game starts or when spawned
-void AFiringWeapon::BeginPlay()
+void AShootWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	MuzzleSocket = MuzzleMeshComponent->GetSocketByName("Muzzle");
+	checkf(MuzzleSocket, TEXT("MuzzleSocket not found"));
+	ShellEjectSocket = MuzzleMeshComponent->GetSocketByName("ShellEject");
+	checkf(ShellEjectSocket, TEXT("ShellEjectSocket not found"));
 }
 
 // Called every frame
-void AFiringWeapon::Tick(float DeltaTime)
+void AShootWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

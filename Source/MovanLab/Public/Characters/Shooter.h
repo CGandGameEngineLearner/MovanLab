@@ -6,6 +6,7 @@
 #include "Components/ShootComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemComponent.h"
 #include "Shooter.generated.h"
 
 class USpringArmComponent;
@@ -44,6 +45,9 @@ private:
 	/** Shoot */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
 	UShootComponent* ShootComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
+	UAbilitySystemComponent* AbilitySystemComponent;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

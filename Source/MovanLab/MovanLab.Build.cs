@@ -15,6 +15,9 @@ public class MovanLab : ModuleRules
 			"InputCore",
 			"EnhancedInput",
 			"PhysicsCore",
+			"GameplayAbilities",
+			"GameplayTags", 
+			"GameplayTasks",
 		});
 	}
 }

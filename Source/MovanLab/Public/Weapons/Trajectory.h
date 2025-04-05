@@ -32,5 +32,7 @@ struct MOVANLAB_API FTrajectory
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EPhysicalSurface> ImpactSurfaceType;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ACharacter> ImpactCharacter = nullptr;
 };

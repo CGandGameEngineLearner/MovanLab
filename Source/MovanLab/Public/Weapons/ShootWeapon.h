@@ -8,25 +8,37 @@
 #include "Components/ArrowComponent.h"
 #include "Equipment/EquipmentInterface.h"
 #include "Weapons/Trajectory.h"
-#include "FiringWeapon.generated.h"
+#include "ShootWeapon.generated.h"
 
 UCLASS()
-class MOVANLAB_API AFiringWeapon : public AWeapon, public IEquipmentInterface
+class MOVANLAB_API AShootWeapon : public AWeapon, public IEquipmentInterface
 {
 	GENERATED_BODY()
 
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UArrowComponent* MuzzleArrow;
+	USkeletalMeshComponent* MuzzleMeshComponent;
 
-	/** 蛋壳抛出位置箭头 */
+	/** 蛋壳抛出位置插槽 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UArrowComponent* ShellEjectArrow;
+	FName ShellEjectName;
 
+	/** 枪口位置插槽 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName MuzzleSocketName;
+
+	/** 弹匣外备用的子弹数量 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ReserveAmmunitionQuantity = 180;
 	
+	/** 弹匣中的子弹数量 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMeshComponent* MuzzleMesh;
+	int32 MagazineAmmunitionQuantity = 30;
+
+	/** 子弹伤害 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BulletInjury = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
@@ -36,6 +48,10 @@ public:
 
 private:
 	bool bFiring = false;
+
+	TObjectPtr<const USkeletalMeshSocket> MuzzleSocket;
+
+	TObjectPtr<const USkeletalMeshSocket> ShellEjectSocket;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -51,7 +67,7 @@ public:
 	virtual void UnEquip_Implementation() override;
 public:
 	// Sets default values for this actor's properties
-	AFiringWeapon();
+	AShootWeapon();
 
 protected:
 	// Called when the game starts or when spawned

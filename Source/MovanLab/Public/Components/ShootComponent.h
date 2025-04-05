@@ -13,6 +13,16 @@ class MOVANLAB_API UShootComponent : public UActorComponent
 	GENERATED_BODY()
 private:
 	float AimPitch;
+	
+public:
+
+	/** 枪械在骨骼上的插槽名称 */ 
+	UPROPERTY(editAnywhere, BlueprintReadWrite, Category=Shoot)
+	FName GunSocketName;
+
+	TObjectPtr<ACharacter> Character = nullptr;
+
+	TObjectPtr<const USkeletalMeshSocket>  GunSocket;
 
 public:
 

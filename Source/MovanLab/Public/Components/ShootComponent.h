@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Weapons/ShootWeapon.h"
 #include "ShootComponent.generated.h"
 
 
@@ -13,6 +14,9 @@ class MOVANLAB_API UShootComponent : public UActorComponent
 	GENERATED_BODY()
 private:
 	float AimPitch;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AShootWeapon> ShootWeapon = nullptr;
 	
 public:
 
@@ -20,10 +24,17 @@ public:
 	UPROPERTY(editAnywhere, BlueprintReadWrite, Category=Shoot)
 	FName GunSocketName;
 
-	TObjectPtr<ACharacter> Character = nullptr;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability System")
+	TSubclassOf<UGameplayAbility> ShootAbilityClass;
+
+private:
+	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
 
 	TObjectPtr<const USkeletalMeshSocket>  GunSocket;
 
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 public:
 
 	UFUNCTION(BlueprintCallable, Category="Shoot")
@@ -31,6 +42,15 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category="Shoot")
 	float GetAimPitch()const;
+
+	UFUNCTION(BlueprintCallable, Category="Shoot")
+	void StartLeftFire();
+
+	UFUNCTION(BlueprintCallable, Category="Shoot")
+	void EndLeftFire();
+
+	UFUNCTION(BlueprintCallable, Category="Shoot")
+	void SetShootWeapon(AShootWeapon* Weapon);
 	
 public:
 	// Sets default values for this component's properties

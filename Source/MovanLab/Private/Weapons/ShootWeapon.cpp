@@ -3,6 +3,7 @@
 
 #include "Weapons/ShootWeapon.h"
 
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 
 
@@ -17,6 +18,8 @@ AShootWeapon::AShootWeapon()
 FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 {
 	FTrajectory Result;
+	
+	
 	if (!OwnerCharacter)
 	{
 		return Result;
@@ -33,10 +36,11 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
 		FVector2D ScreenCenter(ViewportSizeX / 2.f, ViewportSizeY / 2.f);
 
+		Result.StartPosition = MuzzleMeshComponent->GetSocketLocation(MuzzleSocketName);
+
 		// 将屏幕点转换为射线起点与方向
 		if (PC->DeprojectScreenPositionToWorld(ScreenCenter.X, ScreenCenter.Y, WorldLocation, WorldDirection))
 		{
-			Result.StartPosition = WorldLocation;
 			
 			FHitResult HitResult;
 			FVector TraceEnd = WorldLocation + WorldDirection * 10000.f;
@@ -79,7 +83,6 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 void AShootWeapon::StartAttack_Implementation()
 {
 	bFiring = true;
-	
 }
 
 void AShootWeapon::EndAttack_Implementation()
@@ -89,12 +92,22 @@ void AShootWeapon::EndAttack_Implementation()
 
 void AShootWeapon::Equip_Implementation(ACharacter* InOwner)
 {
-	OwnerCharacter = InOwner;
+	Super::Equip(InOwner);
+
+	SpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
+	OwnerAbilitySystemComponent->InitAbilityActorInfo(OwnerCharacter, OwnerCharacter);
 }
 
 void AShootWeapon::UnEquip_Implementation()
 {
-	OwnerCharacter = nullptr;
+	Super::UnEquip();
+	
+	if (SpecHandle.IsValid())
+	{
+		// 移除指定技能
+		OwnerAbilitySystemComponent->ClearAbility(SpecHandle);
+	}
+
 }
 
 

@@ -7,11 +7,12 @@
 
 #include "Components/ArrowComponent.h"
 #include "Equipment/EquipmentInterface.h"
+#include "GAS/Abilities/ShootAbility.h"
 #include "Weapons/Trajectory.h"
 #include "ShootWeapon.generated.h"
 
 UCLASS()
-class MOVANLAB_API AShootWeapon : public AWeapon, public IEquipmentInterface
+class MOVANLAB_API AShootWeapon : public AWeapon
 {
 	GENERATED_BODY()
 
@@ -19,6 +20,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* MuzzleMeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability System")
+	TSubclassOf<UShootAbility> ShootAbilityClass;
 
 	/** 蛋壳抛出位置插槽 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -39,9 +43,7 @@ public:
 	/** 子弹伤害 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BulletInjury = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bDrawDebugLine = false;
@@ -52,6 +54,8 @@ private:
 	TObjectPtr<const USkeletalMeshSocket> MuzzleSocket;
 
 	TObjectPtr<const USkeletalMeshSocket> ShellEjectSocket;
+
+	FGameplayAbilitySpecHandle SpecHandle;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -65,6 +69,7 @@ public:
 	virtual void Equip_Implementation(ACharacter* InOwner) override;
 
 	virtual void UnEquip_Implementation() override;
+
 public:
 	// Sets default values for this actor's properties
 	AShootWeapon();

@@ -3,6 +3,7 @@
 
 #include "Components/ShootComponent.h"
 
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -15,6 +16,36 @@ void UShootComponent::SetAimPitch(float Pitch)
 float UShootComponent::GetAimPitch()const
 {
 	return AimPitch;
+}
+
+void UShootComponent::StartLeftFire()
+{
+	if (ShootWeapon)
+	{
+		ShootWeapon->StartAttack();
+	}
+}
+
+void UShootComponent::EndLeftFire()
+{
+	if (ShootWeapon)
+	{
+		ShootWeapon->EndAttack();
+	}
+}
+
+void UShootComponent::SetShootWeapon(AShootWeapon* Weapon)
+{
+	if (ShootWeapon)
+	{
+		ShootWeapon->UnEquip();
+		ShootWeapon = nullptr;
+	}
+	ShootWeapon = Weapon;
+	if (ShootWeapon)
+	{
+		ShootWeapon->Equip(OwnerCharacter);
+	}
 }
 
 // Sets default values for this component's properties
@@ -39,11 +70,16 @@ void UShootComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	Character = Cast<ACharacter>(GetOwner());
-	checkf(Character,TEXT("ShootComponent必须被挂载在Character类的对象上"));
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	checkf(OwnerCharacter,TEXT("ShootComponent必须被挂载在Character类的对象上"));
 
-	GunSocket = Character->GetMesh()->GetSocketByName(GunSocketName);
+	GunSocket = OwnerCharacter->GetMesh()->GetSocketByName(GunSocketName);
 	checkf(GunSocket, TEXT("GunSocket: %s 不存在，请检查名称是否正确"), *GunSocketName.ToString());
+
+	AbilitySystemComponent = OwnerCharacter->FindComponentByClass<UAbilitySystemComponent>();
+	checkf(AbilitySystemComponent,TEXT("AbilitySystemComponent必须被挂载在Character类的对象上"));
+
+	
 }
 
 

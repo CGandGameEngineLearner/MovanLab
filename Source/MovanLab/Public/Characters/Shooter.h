@@ -9,6 +9,7 @@
 #include "AbilitySystemComponent.h"
 #include "Shooter.generated.h"
 
+class UShooterAttributeSet;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -32,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 	float AimSpeed = 210.f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability System")
+	UShooterAttributeSet* ShooterAttributeSet;
+
 private:
 	
 	/** Camera boom positioning the camera behind the character */
@@ -48,6 +52,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
 	UAbilitySystemComponent* AbilitySystemComponent;
+	
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

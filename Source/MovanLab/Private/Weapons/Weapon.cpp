@@ -3,6 +3,9 @@
 
 #include "Weapons/Weapon.h"
 
+#include "AbilitySystemComponent.h"
+#include "GameFramework/Character.h"
+
 
 void AWeapon::EndAttack_Implementation()
 {
@@ -10,7 +13,23 @@ void AWeapon::EndAttack_Implementation()
 
 void AWeapon::StartAttack_Implementation()
 {
-	
+	//OwnerAbilitySystemComponent->
+}
+
+void AWeapon::Equip_Implementation(ACharacter* InOwner)
+{
+	OwnerCharacter = InOwner;
+
+	OwnerAbilitySystemComponent = OwnerCharacter->FindComponentByClass<UAbilitySystemComponent>();
+
+	checkf(OwnerAbilitySystemComponent, TEXT("Failed to find AbilitySystemComponent"));
+}
+
+void AWeapon::UnEquip_Implementation()
+{
+	OwnerCharacter = nullptr;
+
+	OwnerAbilitySystemComponent = nullptr;
 }
 
 // Sets default values

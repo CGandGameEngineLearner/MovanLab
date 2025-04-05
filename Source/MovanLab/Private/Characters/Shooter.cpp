@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "GAS/Attributes/ShooterAttributeSet.h"
 
 DEFINE_LOG_CATEGORY(LogShooter);
 
@@ -56,6 +57,12 @@ AShooter::AShooter()
 
 	// Shoot Component
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
+
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	ShooterAttributeSet = CreateDefaultSubobject<UShooterAttributeSet>(TEXT("ShooterAttributeSet"));
 }
 
 void AShooter::BeginPlay()

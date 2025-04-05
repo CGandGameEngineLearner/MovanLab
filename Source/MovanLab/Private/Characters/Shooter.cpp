@@ -166,3 +166,13 @@ void AShooter::EndRun(const FInputActionValue& Value)
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
+void AShooter::StartLeftFire(const FInputActionValue& Value)
+{
+	
+}
+
+void AShooter::EndLeftFire(const FInputActionValue& Value)
+{
+	
+}
+

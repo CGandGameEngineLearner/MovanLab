@@ -64,11 +64,17 @@ private:
 	/** Run Input Action */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputAction* RunAction;
+	
+	/** Fire Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LeftFireAction;
 
 public:
 	AShooter();
 	
 
+
+	
 protected:
 
 	/** Called for movement input */
@@ -82,6 +88,10 @@ protected:
 
 	/** Called for end run */
 	void EndRun(const FInputActionValue& Value);
+
+	void StartLeftFire(const FInputActionValue& Value);
+
+	void EndLeftFire(const FInputActionValue& Value);
 	
 protected:
 	// APawn interface

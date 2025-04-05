@@ -26,11 +26,8 @@ UShootComponent::UShootComponent()
 
 	// ...
 	
-	Character = Cast<ACharacter>(GetOwner());
-	checkf(Character,TEXT("ShootComponent必须被挂载在Character类的对象上"));
+	
 
-	GunSocket = Character->GetMesh()->GetSocketByName(GunSocketName);
-	checkf(GunSocket,TEXT("GunSocket: %s 不存在，请检查名称是否正确",*GunSocketName.ToString()));
 
 	
 }
@@ -42,7 +39,11 @@ void UShootComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	Character = Cast<ACharacter>(GetOwner());
+	checkf(Character,TEXT("ShootComponent必须被挂载在Character类的对象上"));
+
+	GunSocket = Character->GetMesh()->GetSocketByName(GunSocketName);
+	checkf(GunSocket, TEXT("GunSocket: %s 不存在，请检查名称是否正确"), *GunSocketName.ToString());
 }
 
 

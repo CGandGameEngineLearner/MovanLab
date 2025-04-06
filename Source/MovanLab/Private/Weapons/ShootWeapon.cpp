@@ -24,7 +24,7 @@ void AShootWeapon::Fire_Implementation()
 
 	FTrajectory Trajectory = ComputeTrajectory_Implementation();
 
-	if (!ShootWeaponFire||!ShootWeaponFire->IsValidLowLevel())
+	if (!ShootWeaponFire||ShootWeaponFire->IsPendingKillPending())
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;

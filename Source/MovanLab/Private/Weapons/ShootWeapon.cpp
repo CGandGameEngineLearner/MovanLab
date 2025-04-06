@@ -12,7 +12,42 @@ AShootWeapon::AShootWeapon()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MuzzleMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MuzzleMesh"));
+	ShootMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MuzzleMesh"));
+}
+
+void AShootWeapon::Fire_Implementation()
+{
+	UAnimInstance* AnimInstance = ShootMeshComponent->GetAnimInstance();
+	AnimInstance->Montage_Play(ShootMontage);
+	
+	// todo: 射击
+
+	FTrajectory Trajectory = ComputeTrajectory_Implementation();
+	
+}
+
+void AShootWeapon::CheckFire_Implementation()
+{
+	if (!bFiring)
+	{
+		return;
+	}
+	UAnimInstance* AnimInstance = ShootMeshComponent->GetAnimInstance();
+	if (!AnimInstance)
+	{
+		return;
+	}
+	
+	
+	// 检查是否有蒙太奇正在播放
+	if (AnimInstance->Montage_IsPlaying(nullptr))
+	{
+		return;
+	}
+
+	
+	Fire();
+	
 }
 
 FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
@@ -36,7 +71,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
 		FVector2D ScreenCenter(ViewportSizeX / 2.f, ViewportSizeY / 2.f);
 
-		Result.StartPosition = MuzzleMeshComponent->GetSocketLocation(MuzzleSocketName);
+		Result.StartPosition = ShootMeshComponent->GetSocketLocation(MuzzleSocketName);
 
 		// 将屏幕点转换为射线起点与方向
 		if (PC->DeprojectScreenPositionToWorld(ScreenCenter.X, ScreenCenter.Y, WorldLocation, WorldDirection))
@@ -83,11 +118,16 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 void AShootWeapon::StartAttack_Implementation()
 {
 	bFiring = true;
+	
 }
 
 void AShootWeapon::EndAttack_Implementation()
 {
 	bFiring = false;
+
+	
+	
+	
 }
 
 void AShootWeapon::Equip_Implementation(ACharacter* InOwner)
@@ -115,9 +155,9 @@ void AShootWeapon::UnEquip_Implementation()
 void AShootWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	MuzzleSocket = MuzzleMeshComponent->GetSocketByName("Muzzle");
+	MuzzleSocket = ShootMeshComponent->GetSocketByName("Muzzle");
 	checkf(MuzzleSocket, TEXT("MuzzleSocket not found"));
-	ShellEjectSocket = MuzzleMeshComponent->GetSocketByName("ShellEject");
+	ShellEjectSocket = ShootMeshComponent->GetSocketByName("ShellEject");
 	checkf(ShellEjectSocket, TEXT("ShellEjectSocket not found"));
 }
 
@@ -125,5 +165,7 @@ void AShootWeapon::BeginPlay()
 void AShootWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	CheckFire();
 }
 

@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ShootInterface.h"
 #include "Weapon.h"
+#include "ShootWeaponFire.h"
 
 #include "Components/ArrowComponent.h"
 #include "Equipment/EquipmentInterface.h"
@@ -12,14 +14,14 @@
 #include "ShootWeapon.generated.h"
 
 UCLASS()
-class MOVANLAB_API AShootWeapon : public AWeapon
+class MOVANLAB_API AShootWeapon : public AWeapon, public IShootInterface
 {
 	GENERATED_BODY()
 
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMeshComponent* MuzzleMeshComponent;
+	USkeletalMeshComponent* ShootMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability System")
 	TSubclassOf<UShootAbility> ShootAbilityClass;
@@ -48,6 +50,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bDrawDebugLine = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ShootMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AShootWeaponFire> WeaponFireActorClass;
+
+	
+
 private:
 	bool bFiring = false;
 
@@ -57,9 +67,19 @@ private:
 
 	FGameplayAbilitySpecHandle SpecHandle;
 
+	TObjectPtr<AShootWeaponFire> WeaponFire = nullptr;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FTrajectory ComputeTrajectory();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CheckFire();
+	
+
+	virtual void Fire_Implementation() override;
+
+	virtual void CheckFire_Implementation();
 
 	virtual FTrajectory ComputeTrajectory_Implementation();
 	

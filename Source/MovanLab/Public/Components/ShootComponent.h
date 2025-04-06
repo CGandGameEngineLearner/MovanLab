@@ -17,18 +17,22 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AShootWeapon> ShootWeapon = nullptr;
+
+	
 	
 public:
 
 	/** 枪械在骨骼上的插槽名称 */ 
 	UPROPERTY(editAnywhere, BlueprintReadWrite, Category=Shoot)
 	FName GunSocketName;
-
-
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability System")
 	TSubclassOf<UGameplayAbility> ShootAbilityClass;
 
+
+
+	
 private:
 	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
 

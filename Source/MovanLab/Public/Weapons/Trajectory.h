@@ -10,17 +10,20 @@ struct MOVANLAB_API FTrajectory
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector StartPosition;
+	FVector StartPosition = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ImpactPosition;
+	FVector ImpactPosition = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ImpactNormal;
+	FVector ImpactNormal = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EPhysicalSurface> ImpactSurfaceType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<ACharacter> ImpactCharacter = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USkeletalMeshComponent> ShootMeshComponent = nullptr;
 };

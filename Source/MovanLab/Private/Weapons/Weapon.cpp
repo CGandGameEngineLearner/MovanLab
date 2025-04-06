@@ -16,13 +16,19 @@ void AWeapon::StartAttack_Implementation()
 	//OwnerAbilitySystemComponent->
 }
 
-void AWeapon::Equip_Implementation(ACharacter* InOwner)
+void AWeapon::Equip_Implementation(ACharacter* InOwner, FName AttachSocketName)
 {
 	OwnerCharacter = InOwner;
 
 	OwnerAbilitySystemComponent = OwnerCharacter->FindComponentByClass<UAbilitySystemComponent>();
 
 	checkf(OwnerAbilitySystemComponent, TEXT("Failed to find AbilitySystemComponent"));
+
+	GetRootComponent()->AttachToComponent(
+		OwnerCharacter->GetMesh(),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		AttachSocketName
+	);
 }
 
 void AWeapon::UnEquip_Implementation()
@@ -30,6 +36,15 @@ void AWeapon::UnEquip_Implementation()
 	OwnerCharacter = nullptr;
 
 	OwnerAbilitySystemComponent = nullptr;
+
+	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	// 尝试将根组件转换为可模拟物理的组件
+	UPrimitiveComponent* PrimitiveComp = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (PrimitiveComp)
+	{
+		// 开启物理模拟
+		PrimitiveComp->SetSimulatePhysics(true);
+	}
 }
 
 // Sets default values

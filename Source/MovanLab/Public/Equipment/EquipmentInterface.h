@@ -26,7 +26,7 @@ class MOVANLAB_API IEquipmentInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Equipment Interface")
-	void Equip(ACharacter* InOwner);
+	void Equip(ACharacter* InOwner, FName AttackSocketName);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Equipment Interface")
 	void UnEquip();

@@ -4,8 +4,9 @@
 #include "Components/ShootComponent.h"
 
 #include "AbilitySystemComponent.h"
+
 #include "GameFramework/Character.h"
-#include "GameFramework/SpringArmComponent.h"
+
 
 
 void UShootComponent::SetAimPitch(float Pitch)
@@ -38,14 +39,15 @@ void UShootComponent::SetShootWeapon(AShootWeapon* Weapon)
 {
 	if (ShootWeapon)
 	{
-		ShootWeapon->UnEquip();
+		IEquipmentInterface::Execute_UnEquip(ShootWeapon);
 		ShootWeapon = nullptr;
 	}
 	ShootWeapon = Weapon;
 	if (ShootWeapon)
 	{
-		ShootWeapon->Equip(OwnerCharacter);
+		IEquipmentInterface::Execute_Equip(ShootWeapon, OwnerCharacter, GunSocketName);
 	}
+	
 }
 
 // Sets default values for this component's properties

@@ -23,7 +23,14 @@ void AShootWeapon::Fire_Implementation()
 	// todo: 射击
 
 	FTrajectory Trajectory = ComputeTrajectory_Implementation();
-	
+
+	if (!ShootWeaponFire)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		ShootWeaponFire = GetWorld()->SpawnActor<AShootWeaponFire>(WeaponFireActorClass,SpawnParams);
+	}
+	ShootWeaponFire->Fire(Trajectory);
 }
 
 void AShootWeapon::CheckFire_Implementation()
@@ -53,7 +60,7 @@ void AShootWeapon::CheckFire_Implementation()
 FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 {
 	FTrajectory Result;
-	
+	Result.ShootMeshComponent = ShootMeshComponent;
 	
 	if (!OwnerCharacter)
 	{
@@ -71,6 +78,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
 		FVector2D ScreenCenter(ViewportSizeX / 2.f, ViewportSizeY / 2.f);
 
+		
 		Result.StartPosition = ShootMeshComponent->GetSocketLocation(MuzzleSocketName);
 
 		// 将屏幕点转换为射线起点与方向
@@ -130,17 +138,21 @@ void AShootWeapon::EndAttack_Implementation()
 	
 }
 
-void AShootWeapon::Equip_Implementation(ACharacter* InOwner)
+void AShootWeapon::Equip_Implementation(ACharacter* InOwner, FName AttachSocketName)
 {
-	Super::Equip(InOwner);
+	Super::Equip_Implementation(InOwner, AttachSocketName);
 
-	SpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
-	OwnerAbilitySystemComponent->InitAbilityActorInfo(OwnerCharacter, OwnerCharacter);
+	if (OwnerAbilitySystemComponent->IsOwnerActorAuthoritative())
+	{
+		SpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
+		OwnerAbilitySystemComponent->InitAbilityActorInfo(OwnerCharacter, OwnerCharacter);
+	}
+	
 }
 
 void AShootWeapon::UnEquip_Implementation()
 {
-	Super::UnEquip();
+	Super::UnEquip_Implementation();
 	
 	if (SpecHandle.IsValid())
 	{

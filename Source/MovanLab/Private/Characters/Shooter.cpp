@@ -59,8 +59,8 @@ AShooter::AShooter()
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	AbilitySystemComponent->SetIsReplicated(false);
+	
 
 	ShooterAttributeSet = CreateDefaultSubobject<UShooterAttributeSet>(TEXT("ShooterAttributeSet"));
 }
@@ -69,6 +69,8 @@ void AShooter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,6 +105,11 @@ void AShooter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		// End Run
 		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Completed, this, &AShooter::EndRun);
+
+
+		EnhancedInputComponent->BindAction(LeftFireAction, ETriggerEvent::Triggered, this, &AShooter::StartLeftFire);
+
+		EnhancedInputComponent->BindAction(LeftFireAction, ETriggerEvent::Completed, this, &AShooter::EndLeftFire);
 	}
 	else
 	{
@@ -175,11 +182,11 @@ void AShooter::EndRun(const FInputActionValue& Value)
 
 void AShooter::StartLeftFire(const FInputActionValue& Value)
 {
-	
+	ShootComponent->StartLeftFire();
 }
 
 void AShooter::EndLeftFire(const FInputActionValue& Value)
 {
-	
+	ShootComponent->EndLeftFire();
 }
 

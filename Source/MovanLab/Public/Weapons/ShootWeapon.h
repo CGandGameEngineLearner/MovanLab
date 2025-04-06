@@ -67,7 +67,7 @@ private:
 
 	FGameplayAbilitySpecHandle SpecHandle;
 
-	TObjectPtr<AShootWeaponFire> WeaponFire = nullptr;
+	TObjectPtr<AShootWeaponFire> ShootWeaponFire = nullptr;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -86,7 +86,7 @@ public:
 	virtual void StartAttack_Implementation() override;
 	virtual void EndAttack_Implementation() override;
 
-	virtual void Equip_Implementation(ACharacter* InOwner) override;
+	virtual void Equip_Implementation(ACharacter* InOwner, FName AttachSocketName) override;
 
 	virtual void UnEquip_Implementation() override;
 

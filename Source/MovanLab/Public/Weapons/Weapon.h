@@ -32,7 +32,7 @@ public:
 	virtual void EndAttack_Implementation();
 
 
-	virtual void Equip_Implementation(ACharacter* InOwner) override;
+	virtual void Equip_Implementation(ACharacter* InOwner, FName AttachSocketName) override;
 
 	virtual void UnEquip_Implementation() override;
 

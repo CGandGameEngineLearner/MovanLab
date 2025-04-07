@@ -46,7 +46,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-	/** Shoot */
+	/** 射击 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
 	UShootComponent* ShootComponent;
 

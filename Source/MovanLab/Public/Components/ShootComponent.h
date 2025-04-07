@@ -14,6 +14,7 @@ class MOVANLAB_API UShootComponent : public UActorComponent
 	GENERATED_BODY()
 private:
 	float AimPitch;
+	float AimYaw;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AShootWeapon> ShootWeapon = nullptr;
@@ -46,6 +47,12 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category="Shoot")
 	float GetAimPitch()const;
+
+	UFUNCTION(BlueprintCallable, Category="Shoot")
+	void SetAimYaw(float Pitch);
+	
+	UFUNCTION(BlueprintPure, Category="Shoot")
+	float GetAimYaw()const;
 
 	UFUNCTION(BlueprintCallable, Category="Shoot")
 	void StartLeftFire();

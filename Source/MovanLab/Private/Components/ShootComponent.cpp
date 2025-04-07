@@ -19,6 +19,16 @@ float UShootComponent::GetAimPitch()const
 	return AimPitch;
 }
 
+void UShootComponent::SetAimYaw(float Pitch)
+{
+	AimYaw = Pitch;
+}
+
+float UShootComponent::GetAimYaw() const
+{
+	return AimYaw;
+}
+
 void UShootComponent::StartLeftFire()
 {
 	if (ShootWeapon)

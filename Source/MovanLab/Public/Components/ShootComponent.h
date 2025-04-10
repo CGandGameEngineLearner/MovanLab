@@ -12,9 +12,7 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MOVANLAB_API UShootComponent : public UActorComponent
 {
 	GENERATED_BODY()
-private:
-	float AimPitch;
-	float AimYaw;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AShootWeapon> ShootWeapon = nullptr;
@@ -25,7 +23,7 @@ public:
 
 	/** 枪械在骨骼上的插槽名称 */ 
 	UPROPERTY(editAnywhere, BlueprintReadWrite, Category=Shoot)
-	FName GunSocketName;
+	FName WeaponSocketName;
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability System")
@@ -36,23 +34,12 @@ public:
 	
 private:
 	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
-
-	TObjectPtr<const USkeletalMeshSocket>  GunSocket;
+	
 
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 public:
 
-	UFUNCTION(BlueprintCallable, Category="Shoot")
-	void SetAimPitch(float Pitch);
-	
-	UFUNCTION(BlueprintPure, Category="Shoot")
-	float GetAimPitch()const;
 
-	UFUNCTION(BlueprintCallable, Category="Shoot")
-	void SetAimYaw(float Pitch);
-	
-	UFUNCTION(BlueprintPure, Category="Shoot")
-	float GetAimYaw()const;
 
 	UFUNCTION(BlueprintCallable, Category="Shoot")
 	void StartLeftFire();

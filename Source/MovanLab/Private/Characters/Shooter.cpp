@@ -152,26 +152,7 @@ void AShooter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 
-	if (ShootComponent != nullptr)
-	{
-		float Pitch = GetControlRotation().Pitch;
-		if (Pitch >= 270.0f)
-		{
-			Pitch = 90.0f - (Pitch - 270.0f);
-		}
-		else
-		{
-			Pitch = -Pitch;
-		}
-		Pitch = -Pitch;
-		ShootComponent->SetAimPitch(Pitch);
-		float Yaw = GetControlRotation().Yaw - GetActorRotation().Yaw;
-		if (Yaw >= 180.0f)
-		{
-			Yaw = - (180.0f - (Yaw - 180.0f));
-		}
-		ShootComponent->SetAimYaw(Yaw);
-	}
+	
 }
 
 void AShooter::StartRun(const FInputActionValue& Value)

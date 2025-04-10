@@ -9,25 +9,7 @@
 
 
 
-void UShootComponent::SetAimPitch(float Pitch)
-{
-	AimPitch = Pitch;
-}
 
-float UShootComponent::GetAimPitch()const
-{
-	return AimPitch;
-}
-
-void UShootComponent::SetAimYaw(float Pitch)
-{
-	AimYaw = Pitch;
-}
-
-float UShootComponent::GetAimYaw() const
-{
-	return AimYaw;
-}
 
 void UShootComponent::StartLeftFire()
 {
@@ -55,7 +37,7 @@ void UShootComponent::SetShootWeapon(AShootWeapon* Weapon)
 	ShootWeapon = Weapon;
 	if (ShootWeapon)
 	{
-		IEquipmentInterface::Execute_Equip(ShootWeapon, OwnerCharacter, GunSocketName);
+		IEquipmentInterface::Execute_Equip(ShootWeapon, OwnerCharacter, WeaponSocketName);
 	}
 	
 }

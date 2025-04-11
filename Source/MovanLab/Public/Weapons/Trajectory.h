@@ -22,7 +22,7 @@ struct MOVANLAB_API FTrajectory
 	TEnumAsByte<EPhysicalSurface> ImpactSurfaceType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<ACharacter> ImpactCharacter = nullptr;
+	TObjectPtr<AActor> ImpactActor = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USkeletalMeshComponent> ShootMeshComponent = nullptr;

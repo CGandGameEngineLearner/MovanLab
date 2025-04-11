@@ -45,7 +45,10 @@ public:
 	/** 子弹伤害 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BulletInjury = 10;
-	
+
+	/** 射速 单位：发每秒 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FiringRate = 30;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bDrawDebugLine = false;

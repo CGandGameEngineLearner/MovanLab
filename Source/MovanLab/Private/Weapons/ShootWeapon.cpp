@@ -4,7 +4,9 @@
 #include "Weapons/ShootWeapon.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "GAS/Effects/DamageGameplayEffect.h"
 
 
 AShootWeapon::AShootWeapon()
@@ -18,7 +20,8 @@ AShootWeapon::AShootWeapon()
 void AShootWeapon::Fire_Implementation()
 {
 	UAnimInstance* AnimInstance = ShootMeshComponent->GetAnimInstance();
-	AnimInstance->Montage_Play(ShootMontage);
+	float PlayRate = ShootMontage->GetPlayLength() * FiringRate;
+	AnimInstance->Montage_Play(ShootMontage,PlayRate);
 	
 	// todo: 射击
 
@@ -31,6 +34,19 @@ void AShootWeapon::Fire_Implementation()
 		ShootWeaponFire = GetWorld()->SpawnActor<AShootWeaponFire>(WeaponFireActorClass,SpawnParams);
 	}
 	ShootWeaponFire->Fire(Trajectory);
+
+	
+	if (IAbilitySystemInterface* TargetASInterface = Cast<IAbilitySystemInterface>(Trajectory.ImpactActor))
+	{
+		
+		if (UAbilitySystemComponent* TargetASC = TargetASInterface->GetAbilitySystemComponent())
+		{
+			if (UGameplayEffect* GameplayEffect = UDamageGameplayEffect::StaticClass()->GetDefaultObject<UGameplayEffect>())
+			{
+				OwnerAbilitySystemComponent->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC);
+			}
+		}
+	}
 }
 
 void AShootWeapon::CheckFire_Implementation()
@@ -51,7 +67,7 @@ void AShootWeapon::CheckFire_Implementation()
 	{
 		return;
 	}
-
+	
 	
 	IShootInterface::Execute_Fire(this);
 	
@@ -113,7 +129,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 					DrawDebugDirectionalArrow(OwnerCharacter->GetWorld(), HitResult.ImpactPoint, HitResult.ImpactPoint + HitResult.ImpactNormal * 100.f, 100.f, FColor::Blue, false, 1.0f, 0, 2.0f);
 				}
 
-				Result.ImpactCharacter = Cast<ACharacter>(HitResult.GetActor());
+				Result.ImpactActor = HitResult.GetActor();
 
 			}
 		}

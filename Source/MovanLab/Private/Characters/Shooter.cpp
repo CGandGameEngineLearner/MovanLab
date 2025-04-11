@@ -65,6 +65,11 @@ AShooter::AShooter()
 	ShooterAttributeSet = CreateDefaultSubobject<UShooterAttributeSet>(TEXT("ShooterAttributeSet"));
 }
 
+UAbilitySystemComponent* AShooter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 void AShooter::BeginPlay()
 {
 	// Call the base class  

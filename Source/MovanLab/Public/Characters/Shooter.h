@@ -6,7 +6,7 @@
 #include "Components/ShootComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "Shooter.generated.h"
 
 class UShooterAttributeSet;
@@ -19,7 +19,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogShooter, Log, All);
 
 UCLASS(config=Game)
-class AShooter : public ACharacter
+class AShooter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -36,6 +36,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability System")
 	UShooterAttributeSet* ShooterAttributeSet;
 
+
+
+
 private:
 	
 	/** Camera boom positioning the camera behind the character */
@@ -50,7 +53,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
 	UShootComponent* ShootComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	UAbilitySystemComponent* AbilitySystemComponent;
 	
 	
@@ -80,7 +83,9 @@ private:
 
 public:
 	AShooter();
-	
+
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 
 	

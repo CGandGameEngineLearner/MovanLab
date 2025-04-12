@@ -21,7 +21,7 @@ void AShooter::BindPropertyEvents()
 {
 	const UHealthAttributeSet* LocalHealthAttributeSet = GetAbilitySystemComponent()->GetSet<UHealthAttributeSet>();
 	LocalHealthAttributeSet->OnOutOfHealth.AddUObject(this,&ThisClass::HandleOutOfHealth);
-}
+} 
 
 void AShooter::HandleOutOfHealth_Implementation(AActor* DamageInstigator, AActor* DamageCauser,
 	 float DamageMagnitude, float OldValue, float NewValue)

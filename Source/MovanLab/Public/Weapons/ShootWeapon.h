@@ -72,6 +72,8 @@ private:
 
 	TObjectPtr<AShootWeaponFire> ShootWeaponFire = nullptr;
 
+	FVector AimTargetPoint;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FTrajectory ComputeTrajectory();

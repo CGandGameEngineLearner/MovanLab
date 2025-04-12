@@ -9,7 +9,7 @@
 #include "AbilitySystemInterface.h"
 #include "Shooter.generated.h"
 
-class UShooterAttributeSet;
+class UHealthAttributeSet;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -23,6 +23,17 @@ class AShooter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
+
+private:
+	void BindPropertyEvents();
+
+public:
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,  float DamageMagnitude, float OldValue, float NewValue);
+
+	virtual void HandleOutOfHealth_Implementation(AActor* DamageInstigator, AActor* DamageCauser, float DamageMagnitude, float OldValue, float NewValue);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 	float RunSpeed = 400.f;
@@ -34,7 +45,7 @@ public:
 	float AimSpeed = 210.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability System")
-	UShooterAttributeSet* ShooterAttributeSet;
+	UHealthAttributeSet* HealthAttributeSet;
 
 
 

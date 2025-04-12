@@ -3,7 +3,7 @@
 
 #include "GAS/Effects/DamageGameplayEffect.h"
 
-#include "GAS/Attributes/ShooterAttributeSet.h"
+#include "GAS/Attributes/HealthAttributeSet.h"
 
 UDamageGameplayEffect::UDamageGameplayEffect()
 
@@ -13,7 +13,7 @@ UDamageGameplayEffect::UDamageGameplayEffect()
 
 	// 创建一个修改生命值的 Modifier
 	FGameplayModifierInfo ModifierInfo;
-	ModifierInfo.Attribute = UShooterAttributeSet::GetHealthAttribute();
+	ModifierInfo.Attribute = UHealthAttributeSet::GetHealthAttribute();
 	ModifierInfo.ModifierOp = EGameplayModOp::Additive;
 	ModifierInfo.ModifierMagnitude = FGameplayEffectModifierMagnitude(FScalableFloat(-10.f)); // 每次射击减少 10 点生命值
 

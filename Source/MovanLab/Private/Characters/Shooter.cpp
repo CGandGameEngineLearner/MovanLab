@@ -10,12 +10,24 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "GAS/Attributes/ShooterAttributeSet.h"
+#include "GAS/Attributes/HealthAttributeSet.h"
 
 DEFINE_LOG_CATEGORY(LogShooter);
 
 //////////////////////////////////////////////////////////////////////////
 // AShooter
+
+void AShooter::BindPropertyEvents()
+{
+	const UHealthAttributeSet* LocalHealthAttributeSet = GetAbilitySystemComponent()->GetSet<UHealthAttributeSet>();
+	LocalHealthAttributeSet->OnOutOfHealth.AddUObject(this,&ThisClass::HandleOutOfHealth);
+}
+
+void AShooter::HandleOutOfHealth_Implementation(AActor* DamageInstigator, AActor* DamageCauser,
+	 float DamageMagnitude, float OldValue, float NewValue)
+{
+	
+}
 
 AShooter::AShooter()
 {
@@ -62,7 +74,7 @@ AShooter::AShooter()
 	AbilitySystemComponent->SetIsReplicated(false);
 	
 
-	ShooterAttributeSet = CreateDefaultSubobject<UShooterAttributeSet>(TEXT("ShooterAttributeSet"));
+	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("HealthAttributeSet"));
 }
 
 UAbilitySystemComponent* AShooter::GetAbilitySystemComponent() const
@@ -75,7 +87,7 @@ void AShooter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	
+	BindPropertyEvents();
 }
 
 //////////////////////////////////////////////////////////////////////////

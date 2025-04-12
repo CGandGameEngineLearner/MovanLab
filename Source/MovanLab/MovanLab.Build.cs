@@ -17,7 +17,8 @@ public class MovanLab : ModuleRules
 			"PhysicsCore",
 			"GameplayAbilities",
 			"GameplayTags", 
-			"GameplayTasks",
+			"GameplayTasks", 
+			"Schola",
 		});
 	}
 }

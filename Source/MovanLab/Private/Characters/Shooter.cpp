@@ -20,7 +20,16 @@ DEFINE_LOG_CATEGORY(LogShooter);
 void AShooter::BindPropertyEvents()
 {
 	const UHealthAttributeSet* LocalHealthAttributeSet = GetAbilitySystemComponent()->GetSet<UHealthAttributeSet>();
-	LocalHealthAttributeSet->OnOutOfHealth.AddUObject(this,&ThisClass::HandleOutOfHealth);
+	if (LocalHealthAttributeSet)
+	{
+		LocalHealthAttributeSet->OnOutOfHealth.AddLambda(
+		[this](AActor* DamageInstigator, AActor* DamageCauser,  float DamageMagnitude, float OldValue, float NewValue)
+		{
+			this->HandleOutOfHealth(DamageInstigator,DamageCauser,  DamageMagnitude, OldValue, NewValue);
+		}
+		);
+	}
+	
 } 
 
 void AShooter::HandleOutOfHealth_Implementation(AActor* DamageInstigator, AActor* DamageCauser,

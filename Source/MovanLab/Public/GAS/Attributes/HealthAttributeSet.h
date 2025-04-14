@@ -21,11 +21,11 @@ public:
 private:
 	// 生命值属性
 	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_Health, Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Health;
+	FGameplayAttributeData Health = 100.0f;
 
 	// 最大生命值
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Health", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxHealth;
+	FGameplayAttributeData MaxHealth = 100.0f;
 
 public:
 	// 使用 ATTRIBUTE_ACCESSORS 宏生成访问器函数

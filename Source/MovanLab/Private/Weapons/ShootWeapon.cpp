@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "GAS/Effects/DamageGameplayEffect.h"
+#include "ProjectSettings/CollisionChannels.h"
 
 
 AShootWeapon::AShootWeapon()
@@ -41,7 +42,7 @@ void AShootWeapon::Fire_Implementation()
 		
 		if (UAbilitySystemComponent* TargetASC = TargetASInterface->GetAbilitySystemComponent())
 		{
-			if (UGameplayEffect* GameplayEffect = UDamageGameplayEffect::StaticClass()->GetDefaultObject<UGameplayEffect>())
+			if (UGameplayEffect* GameplayEffect = UDamageGameplayEffect::StaticClass()->GetDefaultObject<UDamageGameplayEffect>())
 			{
 				OwnerAbilitySystemComponent->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC);
 			}
@@ -89,7 +90,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 	Result.StartPosition = ShootMeshComponent->GetSocketLocation(MuzzleSocketName);
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(OwnerCharacter);
+	//Params.AddIgnoredActor(OwnerCharacter);
 	
 	if (APlayerController* PC = Cast<APlayerController>(OwnerCharacter->GetController()))
 	{
@@ -117,7 +118,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		
 	}
 	
-	bool bHit = OwnerCharacter->GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, TraceEnd, ECC_Visibility, Params);
+	bool bHit = OwnerCharacter->GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, TraceEnd, ECC_ShootWeaponTrajectory, Params);
 
 	if (bHit)
 	{

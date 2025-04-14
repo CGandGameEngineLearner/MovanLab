@@ -19,6 +19,8 @@ public class MovanLab : ModuleRules
 			"GameplayTags", 
 			"GameplayTasks", 
 			"Schola",
+			"AIModule",
+			"NavigationSystem",
 		});
 	}
 }

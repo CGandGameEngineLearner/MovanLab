@@ -7,11 +7,12 @@
 #include "Weapon.h"
 #include "ShootWeaponFire.h"
 
-#include "Components/ArrowComponent.h"
-#include "Equipment/EquipmentInterface.h"
+#include "GameplayAbilities/Public/GameplayAbilitySpec.h"
 #include "GAS/Abilities/ShootAbility.h"
 #include "Weapons/Trajectory.h"
 #include "ShootWeapon.generated.h"
+
+
 
 UCLASS()
 class MOVANLAB_API AShootWeapon : public AWeapon, public IShootInterface
@@ -59,6 +60,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AShootWeaponFire> WeaponFireActorClass;
 
+
 	
 
 private:
@@ -68,7 +70,9 @@ private:
 
 	TObjectPtr<const USkeletalMeshSocket> ShellEjectSocket;
 
-	FGameplayAbilitySpecHandle SpecHandle;
+	FGameplayAbilitySpecHandle GameplayAbilitySpecHandle;
+
+	FGameplayEffectSpecHandle GameplayEffectSpecHandle;
 
 	TObjectPtr<AShootWeaponFire> ShootWeaponFire = nullptr;
 

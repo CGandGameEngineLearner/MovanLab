@@ -30,12 +30,49 @@ void UHealthAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	FGameplayTagContainer SpecAssetTags;
 	Data.EffectSpec.GetAllAssetTags(SpecAssetTags);
 	
+	
 
 	// 处理生命值变化
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+
+		// 当前值已经是修改后的值
+		float CurrentHealth = GetHealth();
+        
+		// 使用 Data.EvaluatedData.Magnitude 获取本次修改的变化量
+		// 变化量为正表示增加，为负表示减少
+		float ChangeAmount = Data.EvaluatedData.Magnitude;
+        
+		// 计算旧值 = 当前值 - 变化量
+		float OldHealth = CurrentHealth - ChangeAmount;
+
+		// 获取效果源（施加效果的对象）
+		UAbilitySystemComponent* SourceASC = Data.EffectSpec.GetEffectContext().GetOriginalInstigatorAbilitySystemComponent();
+
+		// 获取效果源的控制器
+		AActor* SourceActor = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+
+		const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+
+		AActor* DamageCauser = EffectContext.GetEffectCauser();
+
+		// 属性已更改，触发相应事件
+		OnHealthChanged.Broadcast(SourceActor, DamageCauser, ChangeAmount, OldHealth, CurrentHealth);
+        
+		// 检查生命值是否为零
+		if (GetHealth() <= 0.0f && !bOutOfHealth)
+		{
+			bOutOfHealth = true;
+			OnOutOfHealth.Broadcast(SourceActor, DamageCauser, ChangeAmount, OldHealth, CurrentHealth);
+		}
+		else if (GetHealth() > 0.0f)
+		{
+			bOutOfHealth = false;
+		}
 	}
+
+	
 }
 
 void UHealthAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -49,17 +86,7 @@ void UHealthAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHealthAttributeSet, Health, OldValue);
 
-	const float CurrentHealth = GetHealth();
-	const float EstimatedMagnitude = CurrentHealth - OldValue.GetCurrentValue();
-	
-	OnHealthChanged.Broadcast(nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
 
-	if (!bOutOfHealth && CurrentHealth <= 0.0f)
-	{
-		OnOutOfHealth.Broadcast(nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
-	}
-
-	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
 void UHealthAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)

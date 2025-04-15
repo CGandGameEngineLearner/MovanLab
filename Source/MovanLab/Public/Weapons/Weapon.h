@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+
+class UGameplayEffect;
 class UAbilitySystemComponent;
 
 UCLASS()
@@ -20,6 +22,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> GameplayEffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float WeaponLevel = 1.0;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

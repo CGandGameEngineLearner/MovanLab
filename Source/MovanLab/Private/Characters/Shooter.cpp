@@ -79,11 +79,15 @@ AShooter::AShooter()
 	// Shoot Component
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AbilitySystemComponent->SetIsReplicated(false);
-	
 
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("HealthAttributeSet"));
+
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	
+
+	
 }
 
 UAbilitySystemComponent* AShooter::GetAbilitySystemComponent() const

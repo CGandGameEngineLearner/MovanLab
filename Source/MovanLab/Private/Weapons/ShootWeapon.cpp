@@ -42,10 +42,29 @@ void AShootWeapon::Fire_Implementation()
 		
 		if (UAbilitySystemComponent* TargetASC = TargetASInterface->GetAbilitySystemComponent())
 		{
-			if (UGameplayEffect* GameplayEffect = UDamageGameplayEffect::StaticClass()->GetDefaultObject<UDamageGameplayEffect>())
+			
+			// 1. 创建效果上下文
+			FGameplayEffectContextHandle EffectContextHandle = OwnerAbilitySystemComponent->MakeEffectContext();
+
+			// 2. 设置Instigator和EffectCauser
+			AActor* OwnerActor = OwnerAbilitySystemComponent->GetAvatarActor();
+			AActor* InstigatorActor = OwnerActor;
+			AActor* CauserActor = this;
+
+			EffectContextHandle.AddInstigator(InstigatorActor, CauserActor);
+			EffectContextHandle.Get()->SetEffectCauser(CauserActor);
+
+			// 3. 创建效果规格
+			GameplayEffectSpecHandle = OwnerAbilitySystemComponent->MakeOutgoingSpec(
+				GameplayEffectClass, WeaponLevel, EffectContextHandle);
+
+			// 4. 应用效果到目标
+			if (GameplayEffectSpecHandle.IsValid())
 			{
-				OwnerAbilitySystemComponent->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC);
+				OwnerAbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpecHandle.Data.Get(), TargetASC);
 			}
+
+			
 		}
 	}
 }
@@ -166,7 +185,7 @@ void AShootWeapon::Equip_Implementation(ACharacter* InOwner, FName AttachSocketN
 
 	if (OwnerAbilitySystemComponent->IsOwnerActorAuthoritative())
 	{
-		SpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
+		GameplayAbilitySpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
 		OwnerAbilitySystemComponent->InitAbilityActorInfo(OwnerCharacter, OwnerCharacter);
 	}
 	
@@ -176,10 +195,10 @@ void AShootWeapon::UnEquip_Implementation()
 {
 	Super::UnEquip_Implementation();
 	
-	if (SpecHandle.IsValid())
+	if (GameplayAbilitySpecHandle.IsValid())
 	{
 		// 移除指定技能
-		OwnerAbilitySystemComponent->ClearAbility(SpecHandle);
+		OwnerAbilitySystemComponent->ClearAbility(GameplayAbilitySpecHandle);
 	}
 
 }

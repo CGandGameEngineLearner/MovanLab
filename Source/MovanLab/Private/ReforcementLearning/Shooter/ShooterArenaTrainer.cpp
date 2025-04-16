@@ -20,7 +20,7 @@ ETeamAttitude::Type AShooterArenaTrainer::GetTeamAttitudeTowards(const AActor& O
 
 	if (GetPawn()->Tags.Num() > 0 && Other.Tags.Num() > 0)
 	{
-		if (GetPawn()->Tags[0] != GetPawn()->Tags[0])
+		if (GetPawn()->Tags[0] != Other.Tags[0])
 		{
 			Result = ETeamAttitude::Type::Hostile;
 		}

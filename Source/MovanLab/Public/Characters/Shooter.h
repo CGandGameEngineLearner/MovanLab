@@ -100,22 +100,29 @@ public:
 
 
 	
-protected:
+public:
 
 	/** Called for movement input */
+	UFUNCTION(BlueprintCallable)
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
+	UFUNCTION(BlueprintCallable)
 	void Look(const FInputActionValue& Value);
 
 	/** Called for start run */
+	UFUNCTION(BlueprintCallable)
 	void StartRun(const FInputActionValue& Value);
 
 	/** Called for end run */
+	UFUNCTION(BlueprintCallable)
 	void EndRun(const FInputActionValue& Value);
-	
+
+
+	UFUNCTION(BlueprintCallable)
 	void StartLeftFire(const FInputActionValue& Value);
 
+	UFUNCTION(BlueprintCallable)
 	void EndLeftFire(const FInputActionValue& Value);
 	
 protected:

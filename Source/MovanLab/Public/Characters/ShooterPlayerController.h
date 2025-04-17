@@ -3,39 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Training/AbstractTrainer.h"
-#include "ShooterArenaTrainer.generated.h"
+#include "GenericTeamAgentInterface.h"
+#include "GameFramework/PlayerController.h"
+#include "ShooterPlayerController.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class MOVANLAB_API AShooterArenaTrainer : public ABlueprintTrainer, public IGenericTeamAgentInterface
+class MOVANLAB_API AShooterPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
-	
 	GENERATED_BODY()
-	
+
 public:
 	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 
-
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FGenericTeamId TeamId = FGenericTeamId();
-
-
-
-public:
-	// Sets default values for this actor's properties
-	AShooterArenaTrainer();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-
-	
 };

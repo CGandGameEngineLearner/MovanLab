@@ -5,8 +5,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
-#include "GAS/Effects/DamageGameplayEffect.h"
 #include "ProjectSettings/CollisionChannels.h"
 
 
@@ -36,6 +36,25 @@ void AShootWeapon::Fire_Implementation()
 	}
 	ShootWeaponFire->Fire(Trajectory);
 
+	AController* OwnerController = OwnerCharacter->GetController();
+
+	IGenericTeamAgentInterface* OwnerGenericTeamAgentInterface = Cast<IGenericTeamAgentInterface>(OwnerController);
+	if (!OwnerGenericTeamAgentInterface)
+	{
+		return;
+	}
+
+	if (!Trajectory.ImpactActor)
+	{
+		return;
+	}
+	
+
+	if (OwnerGenericTeamAgentInterface->GetTeamAttitudeTowards(*Trajectory.ImpactActor) == ETeamAttitude::Type::Friendly)
+	{
+		return;
+	}
+	
 	
 	if (IAbilitySystemInterface* TargetASInterface = Cast<IAbilitySystemInterface>(Trajectory.ImpactActor))
 	{
@@ -50,6 +69,8 @@ void AShootWeapon::Fire_Implementation()
 			AActor* OwnerActor = OwnerAbilitySystemComponent->GetAvatarActor();
 			AActor* InstigatorActor = OwnerActor;
 			AActor* CauserActor = this;
+			
+			
 
 			EffectContextHandle.AddInstigator(InstigatorActor, CauserActor);
 			EffectContextHandle.Get()->SetEffectCauser(CauserActor);
@@ -62,6 +83,7 @@ void AShootWeapon::Fire_Implementation()
 			if (GameplayEffectSpecHandle.IsValid())
 			{
 				OwnerAbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpecHandle.Data.Get(), TargetASC);
+				OnHitDelegate.Broadcast(Trajectory.ImpactActor);
 			}
 
 			
@@ -103,13 +125,13 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		return Result;
 	}
 
-	FVector WorldLocation;
+	FVector WorldLocation = ShootMeshComponent->GetSocketLocation(MuzzleSocketName);
 	FVector WorldDirection;
 	FVector TraceEnd;
 	Result.StartPosition = ShootMeshComponent->GetSocketLocation(MuzzleSocketName);
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
-	//Params.AddIgnoredActor(OwnerCharacter);
+	Params.AddIgnoredActor(OwnerCharacter);
 	
 	if (APlayerController* PC = Cast<APlayerController>(OwnerCharacter->GetController()))
 	{
@@ -123,7 +145,7 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 		if (PC->DeprojectScreenPositionToWorld(ScreenCenter.X, ScreenCenter.Y, WorldLocation, WorldDirection))
 		{
 			
-			TraceEnd = WorldLocation + WorldDirection * 10000.f;
+			TraceEnd = WorldLocation + WorldDirection * ShootRange;
 
 			Result.ImpactPosition = TraceEnd;
 		}
@@ -131,8 +153,11 @@ FTrajectory AShootWeapon::ComputeTrajectory_Implementation()
 	}
 	else
 	{
-		WorldDirection = OwnerCharacter->GetControlRotation().Vector();
-		TraceEnd = WorldLocation + WorldDirection * 10000.f;
+		FVector OutLocation;
+		FRotator OutRotation;
+		ShootMeshComponent->GetSocketWorldLocationAndRotation(MuzzleSocketName, OutLocation, OutRotation);
+		WorldDirection = OutRotation.RotateVector(FVector::UnitX());
+		TraceEnd = WorldLocation + WorldDirection * ShootRange;
 		Result.ImpactPosition = TraceEnd;
 		
 	}
@@ -188,7 +213,6 @@ void AShootWeapon::Equip_Implementation(ACharacter* InOwner, FName AttachSocketN
 		GameplayAbilitySpecHandle = OwnerAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(ShootAbilityClass, 1, 0));
 		OwnerAbilitySystemComponent->InitAbilityActorInfo(OwnerCharacter, OwnerCharacter);
 	}
-	
 }
 
 void AShootWeapon::UnEquip_Implementation()

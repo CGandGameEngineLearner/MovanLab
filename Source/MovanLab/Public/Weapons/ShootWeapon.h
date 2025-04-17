@@ -13,6 +13,8 @@
 #include "ShootWeapon.generated.h"
 
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHitDelegate, AActor*)
+
 
 UCLASS()
 class MOVANLAB_API AShootWeapon : public AWeapon, public IShootInterface
@@ -60,8 +62,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AShootWeaponFire> WeaponFireActorClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ShootRange = 10000.0f;
+
 
 	
+	FOnHitDelegate OnHitDelegate;
 
 private:
 	bool bFiring = false;
@@ -84,7 +90,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void CheckFire();
+
+
+public:
 	
+
+	
+public:
 
 	virtual void Fire_Implementation() override;
 

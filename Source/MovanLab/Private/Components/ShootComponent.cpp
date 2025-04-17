@@ -4,6 +4,7 @@
 #include "Components/ShootComponent.h"
 
 #include "AbilitySystemComponent.h"
+#include "Characters/ShooterPlayerController.h"
 
 #include "GameFramework/Character.h"
 
@@ -33,11 +34,17 @@ void UShootComponent::SetShootWeapon(AShootWeapon* Weapon)
 	{
 		IEquipmentInterface::Execute_UnEquip(ShootWeapon);
 		ShootWeapon = nullptr;
+		ShootWeapon->OnHitDelegate.Remove(OnHitDelegateHandle);
 	}
 	ShootWeapon = Weapon;
 	if (ShootWeapon)
 	{
 		IEquipmentInterface::Execute_Equip(ShootWeapon, OwnerCharacter, WeaponSocketName);
+		OnHitDelegateHandle = ShootWeapon->OnHitDelegate.AddLambda([this](AActor* HitActor)
+		{
+			OnHit.Broadcast(HitActor);
+		}
+		);
 	}
 	
 }

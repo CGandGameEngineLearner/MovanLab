@@ -86,7 +86,7 @@ AShooter::AShooter()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
-
+	AbilitySystemComponent->AddAttributeSetSubobject(HealthAttributeSet);
 	
 }
 
@@ -99,7 +99,9 @@ void AShooter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	
 	BindPropertyEvents();
 }
 

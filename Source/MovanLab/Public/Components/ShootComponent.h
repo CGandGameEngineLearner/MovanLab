@@ -8,6 +8,8 @@
 #include "ShootComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnHitSignature, UShootComponent, OnHit, AActor*, HitActor);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MOVANLAB_API UShootComponent : public UActorComponent
 {
@@ -17,6 +19,7 @@ class MOVANLAB_API UShootComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AShootWeapon> ShootWeapon = nullptr;
 
+	
 	
 	
 public:
@@ -30,6 +33,9 @@ public:
 	TSubclassOf<UGameplayAbility> ShootAbilityClass;
 
 
+	UPROPERTY(BlueprintAssignable)
+	FOnHitSignature OnHit;
+
 
 	
 private:
@@ -37,6 +43,11 @@ private:
 	
 
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+
+	FDelegateHandle OnHitDelegateHandle;
+
+	
 public:
 
 
